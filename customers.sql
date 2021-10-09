@@ -1,25 +1,25 @@
 with customers as (
-    SELECT 
+    select 
         * 
-    FROM 
+    from 
         analytics-engineers-club.coffee_shop.customers
 ),
 
 orders as (
-    SELECT 
+    select 
         *
-    FROM 
+    from 
         analytics-engineers-club.coffee_shop.orders
 ),
 
 customers_orders as (
-    SELECT 
+    select 
         orders.*, 
         orders.id as order_id, 
         customers.*
-    FROM 
+    from 
         customers 
-    LEFT JOIN orders on customers.id = orders.customer_id
+    left join orders on customers.id = orders.customer_id
 )
 
 select 
