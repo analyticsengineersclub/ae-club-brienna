@@ -12,23 +12,34 @@ orders as (
         analytics-engineers-club.coffee_shop.orders
 ),
 
+orders_per_customer as (
+    select  
+        customer_id, 
+        min(created_at) as first_order_at, 
+        count(distinct id) as number_of_orders 
+    from 
+        orders 
+    group by 1
+),
+
 customers_orders as (
     select 
-        orders.*, 
-        orders.id as order_id, 
-        customers.*
+        orders_per_customer.customer_id, 
+        customers.name, 
+        customers.email, 
+        orders_per_customer.first_order_at, 
+        orders_per_customer.number_of_orders
     from 
-        customers 
-    left join orders on customers.id = orders.customer_id
+        orders_per_customer 
+    left join customers on customers.id = orders_per_customer.customer_id
 )
 
 select 
     customer_id, 
     name, 
     email, 
-    min(created_at) AS first_order_at,
-    count(distinct order_id) AS number_of_orders
+    first_order_at, 
+    number_of_orders
 from customers_orders 
-group by 1, 2, 3
 order by 4
 limit 5;
